@@ -1,0 +1,11 @@
+SELECT * FROM Incident_table WHERE Incident_ID IN 
+(SELECT DISTINCT Incident_ID FROM Demographic_table WHERE child > 0);
+
+SELECT SUM(Demographic_table.Adults) AS Num_Adults, SUM(Demographic_table.Teen) AS Num_Teens, SUM(Demographic_table.Child) AS Num_Children, 
+SUM(Demographic_table.Male) AS Num_Males, SUM(Demographic_table.Female) AS Num_Females
+FROM Demographic_table
+JOIN Incident_table ON Demographic_table.Incident_ID = Incident_table.Incident_ID
+JOIN Location_table ON Incident_table.Incident_ID = Location_table.Incident_ID
+WHERE Location_table.State = 'California';
+
+
