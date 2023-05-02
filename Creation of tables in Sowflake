@@ -1,0 +1,32 @@
+USE database GV;
+CREATE TABLE Incident (incident_id VARCHAR(50) NOT NULL Primary kEY , date date not null);
+CREATE TABLE Location_table(location_id VARCHAR(50) NOT NULL Primary kEY , state varchar(50) not null,city_or_country varchar(50) not null, address varchar(100) not null,latitude decimal(10,6) not null,longitude decimal(10,6) not null,incident_id varchar(50) not null,CONSTRAINT FK_Incident_incident_id FOREIGN KEY (incident_id) REFERENCES Incident(incident_id));
+ALTER TABLE Incident RENAME TO Incident_table;
+CREATE TABLE Demographic_table (
+   adults INT NOT NULL,
+   teen INT NOT NULL,
+   child INT NOT NULL,
+   male INT NOT NULL,
+   female INT NOT NULL,
+   demographic_id VARCHAR(50) NOT NULL PRIMARY KEY,
+   incident_id VARCHAR(50) NOT NULL,
+   CONSTRAINT FK_Demographic_incident_id FOREIGN KEY (incident_id) REFERENCES Incident_table(incident_id)
+);
+CREATE TABLE Participant (
+   Victim INT NOT NULL,
+   suspect INT NOT NULL,
+   participant_id VARCHAR(50) NOT NULL PRIMARY KEY,
+   incident_id VARCHAR(50) NOT NULL,
+   demographic_id VARCHAR(50) NOT NULL,
+   CONSTRAINT FK_Participant_Demographic_id FOREIGN KEY (demographic_id) REFERENCES Demographic_table(demographic_id),
+   CONSTRAINT FK_Participant_incident_id FOREIGN KEY (incident_id) REFERENCES Incident_table(incident_id)
+);
+
+SELECT CURRENT_ACCOUNT(), CURRENT_SCHEMA();
+ALTER TABLE Participant RENAME TO Participant_table;
+CREATE TABLE Status_table(unharmed int not null, n_killed int not null,n_injured int not null,status_id varchar(50) not null primary key,incident_id varchar(50) not null, constraint FK_Status_incident_id FOREIGN KEY(incident_id) REFERENCES Incident_table(incident_id));
+CREATE TABLE Participation_table (incident_id VARCHAR(50) NOT NULL, participant_id VARCHAR(50) NOT NULL, CONSTRAINT PK_Participation PRIMARY KEY (incident_id, participant_id), CONSTRAINT FK_Participation_incident_id FOREIGN KEY (incident_id) REFERENCES Incident_table (incident_id), CONSTRAINT FK_Participation_participant_id FOREIGN KEY (participant_id) REFERENCES Participant_table (participant_id));
+
+
+UPDATE incident_table 
+SET date = CAST(date AS VARCHAR(50));
