@@ -1,0 +1,46 @@
+DROP STORAGE INTEGRATION GCP_INT_gv_1
+CREATE STORAGE INTEGRATION GCP_INT_gv_1
+TYPE = EXTERNAL_STAGE
+ENABLED = TRUE
+STORAGE_PROVIDER = GCS
+STORAGE_ALLOWED_LOCATIONS = ('gcs://gv_1/');
+
+
+CREATE OR REPLACE STAGE external_stage_gv_1
+URL = 'gcs://gv_1'
+STORAGE_INTEGRATION = GCP_INT_gv_1;
+
+Copying the contents of the bucket to snowflake:
+COPY INTO Incident_table
+FROM @external_stage_gv_1/Incident.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+
+COPY INTO location_table
+FROM @external_stage_gv_1/Location.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+COPY INTO demographic_table
+FROM @external_stage_gv_1/Demographic.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+COPY INTO participant_table
+FROM @external_stage_gv_1/Participant.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+COPY INTO status_table
+FROM @external_stage_gv_1/Status.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+
+COPY INTO participation_table
+FROM @external_stage_gv_1/Participation.csv
+FILE_FORMAT = (TYPE = CSV)
+ON_ERROR='Continue';
+
+
